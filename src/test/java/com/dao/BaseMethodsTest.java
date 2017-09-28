@@ -17,4 +17,8 @@ public class BaseMethodsTest {
         String query = "delete from " + tableName;
         namedParameterJdbcTemplate.getJdbcOperations().update(query);
     }
+
+    public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
+        return namedParameterJdbcTemplate;
+    }
 }

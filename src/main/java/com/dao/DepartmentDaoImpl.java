@@ -51,7 +51,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
 
     public List<Department> getAll() {
         String query = "select * from departments";
-        return namedParameterJdbcTemplate.query(query, new RowMapper<Department>() {
+        List<Department> departments = namedParameterJdbcTemplate.query(query, new RowMapper<Department>() {
             public Department mapRow(ResultSet resultSet, int i) throws SQLException {
                 Department department = new Department();
                 department.setId(resultSet.getInt("id"));
@@ -59,5 +59,9 @@ public class DepartmentDaoImpl implements DepartmentDao {
                 return department;
             }
         });
+        if (departments.isEmpty()) {
+            throw new IllegalArgumentException("You don't have no one department");
+        }
+        return departments;
     }
 }
