@@ -22,7 +22,7 @@ public class TestDepartmentDao extends BaseMethodsTest{
     public void testAddDepartment() {
       String departmentName = "Fishing";
       departmentDao.add(departmentName);
-      int departmentId = getIdByName(departmentName);
+      int departmentId = getIdByNameDepartment(departmentName);
       Optional<Department> departmentOptional = departmentDao.getById(departmentId);
       Assert.assertEquals("Actual result must be expected", departmentName, departmentOptional.get().getName());
     }
