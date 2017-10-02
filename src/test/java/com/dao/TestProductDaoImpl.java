@@ -26,7 +26,7 @@ public class TestProductDaoImpl extends BaseMethodsTest {
         product.setPrice(300);
         product.setDepartmentId(departmentId);
         productDao.addProduct(product);
-        Product actualProduct = productDao.getByName(productName);
+        Product actualProduct = productDao.getById(productName);
         Assert.assertEquals("Actual result must be expected", actualProduct.getName(), productName);
     }
 

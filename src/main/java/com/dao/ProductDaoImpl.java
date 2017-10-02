@@ -47,9 +47,9 @@ public class ProductDaoImpl implements ProductDao {
         return products;
     }
 
-    public Product getByName(String name) {
-        String query = "select * from products where product_name = :p_name";
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("p_name", name);
+    public Product getById(int id) {
+        String query = "select * from products where id = :p_id";
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("p_id", id);
         Product product = namedParameterJdbcTemplate.queryForObject(query, sqlParameterSource, new RowMapper<Product>() {
             public Product mapRow(ResultSet resultSet, int i) throws SQLException {
                 Product product = new Product();

@@ -9,5 +9,5 @@ public interface ProductDao {
 
     List<Product> getAllProducts();
 
-    Product getByName(String name);
+    Product getById(int id);
 }
