@@ -5,13 +5,13 @@ public class Product {
     private int id;
     private String name;
     private int price;
-    private int departmentId;
+    private Department department;
 
-    public Product(int id, String name, int price, int departmentId) {
+    public Product(int id, String name, int price, Department department) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.departmentId = departmentId;
+        this.department = department;
     }
 
     public Product() {
@@ -42,11 +42,11 @@ public class Product {
         this.price = price;
     }
 
-    public int getDepartmentId() {
-        return departmentId;
+    public Department getDepartment() {
+        return department;
     }
 
-    public void setDepartmentId(int departmentId) {
-        this.departmentId = departmentId;
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 }

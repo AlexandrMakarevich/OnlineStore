@@ -1,8 +1,7 @@
 package com.dao;
 
+import com.builder.OrderBuilderFromResultSet;
 import com.client.Order;
-import com.client.OrderItem;
-import com.client.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -11,13 +10,11 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
 import javax.annotation.Resource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository("orderDaoImpl")
 public class OrderDaoImpl implements OrderDao {
@@ -25,8 +22,8 @@ public class OrderDaoImpl implements OrderDao {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    @Resource(name = "productDaoImpl")
-    private ProductDao productDao;
+    @Resource(name = "orderBuilderFromResultSet")
+    private OrderBuilderFromResultSet orderBuilder;
 
     public void addOrder(Order order) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -34,7 +31,7 @@ public class OrderDaoImpl implements OrderDao {
         if (countProductsInOrder == 0) {
             throw new IllegalArgumentException("Order is not initialized");
         }
-        String query = "insert into orders (product_id, quantity, status) value(:p_product_id, :p_quantity, :p_status)";
+        String query = "insert into order (product_id, quantity, status) value(:p_product_id, :p_quantity, :p_status)";
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("p_product_id", order.getOrderItems().get(0).getProduct().getId());
         mapSqlParameterSource.addValue("p_quantity", order.getOrderItems().get(0).getQuantity());
@@ -45,7 +42,7 @@ public class OrderDaoImpl implements OrderDao {
             return;
         }
         for (int i = 1; i > countProductsInOrder - 1; i++) {
-            String sql = "insert into orders (id, product_id, quantity, status) " +
+            String sql = "insert into order (id, product_id, quantity, status) " +
                     "value(:p_product_id, :p_quantity, :p_status) where id = :p_id";
             MapSqlParameterSource mapSqlParameterSource1 = new MapSqlParameterSource();
             mapSqlParameterSource1.addValue("p_id", idOfLastInsertOrder);
@@ -57,48 +54,36 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     public List<Order> getAllOrders() {
-        String query = "select * from orders";
-        return namedParameterJdbcTemplate.query(query, new ResultSetExtractor<List<Order>>() {
-            public List<Order> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
-                List<Order> orders = new ArrayList<Order>();
+        String query = "select order.id, order.product_id, order.quantity, order.status," +
+                " product.product_name, product.price, product.department_id,department.name " +
+                "from order inner join product on order.product_id=product.id " +
+                "inner join department on product.department_id=department.id " +
+                "order by order.id, product.id";
+         Collection<Order> orders = namedParameterJdbcTemplate.query(query, new ResultSetExtractor<Collection<Order>>() {
+            public Collection<Order> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
                 Map<Integer, Order> orderMap = new HashMap<Integer, Order>();
                 while (resultSet.next()) {
-                    if (orderMap.containsKey(resultSet.getInt("id"))) {
-                        Order order = orderMap.get(resultSet.getInt("id"));
-                        List<OrderItem> orderItems = order.getOrderItems();
-                        OrderItem orderItem = new OrderItem();
-                        orderItem.setProduct(productDao.getById(resultSet.getInt("product_id")));
-                        orderItem.setQuantity(resultSet.getInt("quantity"));
-                        orderItems.add(orderItem);
+                    Order order = orderBuilder.buildOrderFromResultSet(resultSet);
+                    if (orderMap.containsKey(order.getId())) {
+                        orderBuilder.addInExistingOrder(order, orderMap);
                         continue;
                     }
-                    Order order = createOrder(resultSet);
                     orderMap.put(order.getId(), order);
                 }
-                for (Map.Entry<Integer, Order> orderEntry : orderMap.entrySet()) {
-                    orders.add(orderEntry.getValue());
-                }
-                return orders;
+                return orderMap.values();
             }
         });
-    }
-
-    public Order createOrder(ResultSet resultSet) throws SQLException {
-        Order order = new Order();
-        order.setId(resultSet.getInt("id"));
-        List<OrderItem> orderItems = new ArrayList<OrderItem>();
-        OrderItem orderItem = new OrderItem();
-        Product product = productDao.getById(resultSet.getInt("product_id"));
-        orderItem.setProduct(product);
-        orderItem.setQuantity(resultSet.getInt("quantity"));
-        orderItems.add(orderItem);
-        order.setOrderItems(orderItems);
-        order.setStatus(resultSet.getString("status"));
-        return order;
+         return  new ArrayList<Order>(orders);
     }
 
     public Order getOrderById(int orderId) {
-
+//        String query = "select * from orders where id = :p_id";
+//        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("p_id", orderId);
+//        namedParameterJdbcTemplate.query(query, sqlParameterSource, new ResultSetExtractor<Order>() {
+//            public Order extractData(ResultSet rs) throws SQLException, DataAccessException {
+//                return null;
+//            }
+//        });
         return null;
     }
 }

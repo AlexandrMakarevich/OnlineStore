@@ -1,15 +1,21 @@
 package com.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
 
     private Integer id;
-    public static final String DEFAULT_STATUS = "Pending";
+    private List<OrderItem> orderItems = new ArrayList<OrderItem>();
     private String status;
-    private List<OrderItem> orderItems;
+    public static final String DEFAULT_STATUS = "Pending";
 
-    public Order() {
+    public void addOrderItems(List<OrderItem> orderItemList) {
+        orderItems.addAll(orderItemList);
+    }
+
+    public void addOrderItem(OrderItem orderItem) {
+        orderItems.add(orderItem);
     }
 
     public String getStatus() {

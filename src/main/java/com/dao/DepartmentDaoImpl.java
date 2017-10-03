@@ -12,6 +12,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import static com.constant.Constant.DEPARTMENT_ID;
+import static com.constant.Constant.NAME;
+
 @Repository("departmentDaoImpl")
 public class DepartmentDaoImpl implements DepartmentDao {
 
@@ -23,7 +26,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
     }
 
     public void add(String name) {
-        String query = "insert into departments(name) value(:p_name)";
+        String query = "insert into department(name) value(:p_name)";
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("p_name", name);
         int changeColumn = namedParameterJdbcTemplate.update(query, sqlParameterSource);
         if (changeColumn == 0) {
@@ -33,13 +36,13 @@ public class DepartmentDaoImpl implements DepartmentDao {
     }
 
     public Optional<Department> getById(int id) {
-        String query = "select * from departments where id = :p_id";
+        String query = "select id department_id, name from department where id = :p_id";
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("p_id", id);
         List<Department> departments = namedParameterJdbcTemplate.query(query, sqlParameterSource, new RowMapper<Department>() {
             public Department mapRow(ResultSet resultSet, int i) throws SQLException {
                 Department department = new Department();
-                department.setId(resultSet.getInt("id"));
-                department.setName(resultSet.getString("name"));
+                department.setId(resultSet.getInt(DEPARTMENT_ID));
+                department.setName(resultSet.getString(NAME));
                 return department;
             }
         });
@@ -50,12 +53,12 @@ public class DepartmentDaoImpl implements DepartmentDao {
     }
 
     public List<Department> getAll() {
-        String query = "select * from departments";
+        String query = "select id department_id, name from department";
         List<Department> departments = namedParameterJdbcTemplate.query(query, new RowMapper<Department>() {
             public Department mapRow(ResultSet resultSet, int i) throws SQLException {
                 Department department = new Department();
-                department.setId(resultSet.getInt("id"));
-                department.setName(resultSet.getString("name"));
+                department.setId(resultSet.getInt(DEPARTMENT_ID));
+                department.setName(resultSet.getString(NAME));
                 return department;
             }
         });

@@ -14,10 +14,10 @@ public class RestProductDaoController {
     @Resource(name = "productDaoImpl")
     private ProductDao productDao;
 
-//    @RequestMapping(value = "/product/{name}", method = RequestMethod.GET)
-//    public Product getProductByName(@PathVariable("name") String name) {
-//        return productDao.getById(name);
-//    }
+    @RequestMapping(value = "/product/{id}", method = RequestMethod.GET)
+    public Product getProductById(@PathVariable("id") int id) {
+        return productDao.getById(id);
+    }
 
     @RequestMapping(value = "/allProducts", method = RequestMethod.GET)
     public List<Product> getAllProducts() {

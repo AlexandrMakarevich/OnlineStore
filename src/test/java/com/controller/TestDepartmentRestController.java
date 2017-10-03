@@ -15,7 +15,8 @@ public class TestDepartmentRestController extends BaseMethodsTest {
 
     @Before
     public void init() {
-        cleanTable("departments");
+        cleanTable("product");
+        cleanTable("department");
     }
 
     @Test
