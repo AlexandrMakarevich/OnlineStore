@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 @Repository("productDaoImpl")
 public class ProductDaoImpl implements ProductDao {
@@ -21,12 +22,15 @@ public class ProductDaoImpl implements ProductDao {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    @Resource(name = "queries")
+    private Map<String, String> queries;
+
     @Resource(name = "productBuilderFromResultSet")
     private ProductBuilderFromResultSet productBuilderFromResultSet;
 
     public int addProduct(Product product) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String query = "insert into product(product_name, price, department_id) values(:p_name, :p_price, :p_departmentId)";
+        String query = queries.get("addProduct");
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("p_name", product.getName());
         mapSqlParameterSource.addValue("p_price", product.getPrice());
@@ -39,9 +43,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     public List<Product> getAllProducts() {
-        String query = "select product.id product_id, product.product_name," +
-                " product.price, product.department_id, department.name " +
-                "from product inner join department on product.department_id=department.id";
+        String query = queries.get("getAllProduct");
         List<Product> products = namedParameterJdbcTemplate.query(query, new RowMapper<Product>() {
             public Product mapRow(ResultSet resultSet, int i) throws SQLException {
                return productBuilderFromResultSet.buildFromResultSet(resultSet);
@@ -54,10 +56,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     public Product getById(int id) {
-        String query = "select product.id product_id, product.product_name," +
-                " product.price, product.department_id, department.name " +
-                "from product inner join department on product.department_id=department.id " +
-                "where product.id = :p_id;";
+        String query = queries.get("productGetById");
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("p_id", id);
         Product product = namedParameterJdbcTemplate.queryForObject(query, sqlParameterSource, new RowMapper<Product>() {
             public Product mapRow(ResultSet resultSet, int i) throws SQLException {

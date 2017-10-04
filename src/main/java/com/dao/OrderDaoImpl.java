@@ -22,6 +22,9 @@ public class OrderDaoImpl implements OrderDao {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    @Resource(name = "queries")
+    private Map<String, String> queries;
+
     @Resource(name = "orderBuilderFromResultSet")
     private OrderBuilderFromResultSet orderBuilder;
 
@@ -31,7 +34,7 @@ public class OrderDaoImpl implements OrderDao {
         if (countProductsInOrder == 0) {
             throw new IllegalArgumentException("Order is not initialized");
         }
-        String query = "insert into order (product_id, quantity, status) value(:p_product_id, :p_quantity, :p_status)";
+        String query = queries.get("addOrderWithoutId");
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("p_product_id", order.getOrderItems().get(0).getProduct().getId());
         mapSqlParameterSource.addValue("p_quantity", order.getOrderItems().get(0).getQuantity());
@@ -42,8 +45,7 @@ public class OrderDaoImpl implements OrderDao {
             return;
         }
         for (int i = 1; i > countProductsInOrder - 1; i++) {
-            String sql = "insert into order (id, product_id, quantity, status) " +
-                    "value(:p_product_id, :p_quantity, :p_status) where id = :p_id";
+            String sql = queries.get("addOrderWithId");
             MapSqlParameterSource mapSqlParameterSource1 = new MapSqlParameterSource();
             mapSqlParameterSource1.addValue("p_id", idOfLastInsertOrder);
             mapSqlParameterSource1.addValue("p_product_id", order.getOrderItems().get(i).getProduct().getId());
@@ -54,11 +56,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     public List<Order> getAllOrders() {
-        String query = "select order.id, order.product_id, order.quantity, order.status," +
-                " product.product_name, product.price, product.department_id,department.name " +
-                "from order inner join product on order.product_id=product.id " +
-                "inner join department on product.department_id=department.id " +
-                "order by order.id, product.id";
+        String query = queries.get("getAllOrder");
          Collection<Order> orders = namedParameterJdbcTemplate.query(query, new ResultSetExtractor<Collection<Order>>() {
             public Collection<Order> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
                 Map<Integer, Order> orderMap = new HashMap<Integer, Order>();

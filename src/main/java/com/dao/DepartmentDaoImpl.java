@@ -8,10 +8,11 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
+import javax.annotation.Resource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-
+import java.util.Map;
 import static com.constant.Constant.DEPARTMENT_ID;
 import static com.constant.Constant.NAME;
 
@@ -20,13 +21,16 @@ public class DepartmentDaoImpl implements DepartmentDao {
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    @Resource(name = "queries")
+    private Map<String, String> queries;
+
     @Autowired
     public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     public void add(String name) {
-        String query = "insert into department(name) value(:p_name)";
+        String query = queries.get("addDepartment");
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("p_name", name);
         int changeColumn = namedParameterJdbcTemplate.update(query, sqlParameterSource);
         if (changeColumn == 0) {
@@ -36,7 +40,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
     }
 
     public Optional<Department> getById(int id) {
-        String query = "select id department_id, name from department where id = :p_id";
+        String query = queries.get("departmentGetById");
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("p_id", id);
         List<Department> departments = namedParameterJdbcTemplate.query(query, sqlParameterSource, new RowMapper<Department>() {
             public Department mapRow(ResultSet resultSet, int i) throws SQLException {
@@ -53,7 +57,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
     }
 
     public List<Department> getAll() {
-        String query = "select id department_id, name from department";
+        String query = queries.get("getAllDepartment");
         List<Department> departments = namedParameterJdbcTemplate.query(query, new RowMapper<Department>() {
             public Department mapRow(ResultSet resultSet, int i) throws SQLException {
                 Department department = new Department();
