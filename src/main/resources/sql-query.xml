@@ -6,24 +6,25 @@
     <bean id="queries" class="java.util.HashMap">
         <constructor-arg>
             <map>
-                <entry key="addDepartment" value="insert into department(name) value(:p_name)"/>
+                <entry key="addDepartment" value="insert into department(department_name) value(:p_name)"/>
 
-                <entry key="departmentGetById" value="select id department_id, name from department where id = :p_id"/>
+                <entry key="departmentGetById" value="select id department_id, department_name from department where id = :p_id"/>
 
-                <entry key="getAllDepartment" value="select id department_id, name from department"/>
+                <entry key="getAllDepartment" value="select id department_id, department_name from department"/>
 
                 <entry key="addProduct" value="insert into product(product_name, price, department_id) values(:p_name, :p_price, :p_departmentId)"/>
 
-                <entry key="getAllProduct" value="select product.id product_id, product.product_name, product.price, product.department_id, department.name from product inner join department on product.department_id=department.id"/>
+                <entry key="getAllProduct" value="select product.id product_id, product.product_name, product.price, product.department_id, department.department_name from product inner join department on product.department_id=department.id"/>
 
-                <entry key="productGetById" value="select product.id product_id, product.product_name, product.price, product.department_id, department.name from product inner join department on product.department_id=department.id where product.id = :p_id"/>
+                <entry key="productGetById" value="select product.id product_id, product.product_name, product.price, product.department_id, department.department_name from product inner join department on product.department_id=department.id where product.id = :p_id"/>
 
-                <entry key="addOrderWithoutId" value="insert into order (product_id, quantity, status) value(:p_product_id, :p_quantity, :p_status)"/>
+                <entry key="addOrder" value="insert into `order`(status) value(:p_status)"/>
 
-                <entry key="addOrderWithId" value="insert into order (id, product_id, quantity, status) value(:p_product_id, :p_quantity, :p_status) where id = :p_id"/>
+                <entry key="addOrderItem" value="insert into order_item (order_id, product_id, quantity) value(:p_id, :p_product_id, :p_quantity) where id = :p_id"/>
 
-                <entry key="getAllOrder" value="select order.id, order.product_id, order.quantity, order.status, product.product_name, product.price, product.department_id,department.name from order inner join product on order.product_id=product.id inner join department on product.department_id=department.id order by order.id, product.id"/>
+                <entry key="getAllOrder" value="select order_item.order_id, order_item.product_id, order_item.quantity, product.product_name, product.price, product.department_id,department.department_name,`order`.status from order_item inner join product on order_item.product_id=product.id inner join department on product.department_id=department.id inner join `order` on `order`.id = order_item.order_id"/>
 
+                <entry key="getOrderById" value="select order_item.order_id, order_item.product_id, order_item.quantity, product.product_name, product.price, product.department_id,department.department_name,`order`.status from order_item inner join product on order_item.product_id=product.id inner join department on product.department_id=department.id inner join `order` on `order`.id = order_item.order_id where `order`.id = :p_id "/>
             </map>
         </constructor-arg>
     </bean>

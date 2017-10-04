@@ -1,20 +1,21 @@
 package com.dao;
 
 import com.client.Department;
-import com.google.common.base.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
+
 import javax.annotation.Resource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+
 import static com.constant.Constant.DEPARTMENT_ID;
-import static com.constant.Constant.NAME;
+import static com.constant.Constant.DEPARTMENT_NAME;
 
 @Repository("departmentDaoImpl")
 public class DepartmentDaoImpl implements DepartmentDao {
@@ -39,21 +40,17 @@ public class DepartmentDaoImpl implements DepartmentDao {
         }
     }
 
-    public Optional<Department> getById(int id) {
+    public Department getById(int id) {
         String query = queries.get("departmentGetById");
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("p_id", id);
-        List<Department> departments = namedParameterJdbcTemplate.query(query, sqlParameterSource, new RowMapper<Department>() {
+        return namedParameterJdbcTemplate.queryForObject(query, sqlParameterSource, new RowMapper<Department>() {
             public Department mapRow(ResultSet resultSet, int i) throws SQLException {
                 Department department = new Department();
                 department.setId(resultSet.getInt(DEPARTMENT_ID));
-                department.setName(resultSet.getString(NAME));
+                department.setName(resultSet.getString(DEPARTMENT_NAME));
                 return department;
             }
         });
-        if (departments.isEmpty()) {
-            return Optional.absent();
-        }
-        return Optional.of(departments.get(0));
     }
 
     public List<Department> getAll() {
@@ -62,7 +59,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
             public Department mapRow(ResultSet resultSet, int i) throws SQLException {
                 Department department = new Department();
                 department.setId(resultSet.getInt(DEPARTMENT_ID));
-                department.setName(resultSet.getString(NAME));
+                department.setName(resultSet.getString(DEPARTMENT_NAME));
                 return department;
             }
         });

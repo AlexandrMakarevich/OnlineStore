@@ -16,7 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static com.constant.Constant.DEPARTMENT_ID;
-import static com.constant.Constant.NAME;
+import static com.constant.Constant.DEPARTMENT_NAME;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-store-application.xml")
@@ -31,13 +31,13 @@ public abstract  class BaseMethodsTest {
     }
 
     public int getIdByNameDepartment(String departmentName) {
-        String query = "select id department_id, name from department where name = :p_name";
+        String query = "select id department_id, department_name from department where department_name = :p_name";
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("p_name", departmentName);
         Department department = namedParameterJdbcTemplate.queryForObject(query, sqlParameterSource, new RowMapper<Department>() {
             public Department mapRow(ResultSet resultSet, int i) throws SQLException {
                 Department department = new Department();
                 department.setId(resultSet.getInt(DEPARTMENT_ID));
-                department.setName(resultSet.getString(NAME));
+                department.setName(resultSet.getString(DEPARTMENT_NAME));
                 return department;
             }
         });
@@ -46,7 +46,7 @@ public abstract  class BaseMethodsTest {
 
     public int createDepartment(String depName) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String query = "insert into department(name) value(:p_name)";
+        String query = "insert into department(department_name) value(:p_name)";
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("p_name", depName);
         int rowChanged = namedParameterJdbcTemplate.update(query, sqlParameterSource, keyHolder);
         if (rowChanged == 0) {

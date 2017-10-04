@@ -27,7 +27,7 @@ public class TestProductDaoImpl extends BaseMethodsTest {
     public void testAddProduct() {
         String productName = "TV";
         int departmentId = createDepartment("Department1");
-        int actualId = productDao.addProduct(productBuilder.createProduct(productName, 300, departmentDao.getById(departmentId).get()));
+        int actualId = productDao.addProduct(productBuilder.createProduct(productName, 300, departmentDao.getById(departmentId)));
         Product actualProduct = productDao.getById(actualId);
         Assert.assertEquals("Actual result must be expected", actualProduct.getName(), productName);
     }
@@ -37,8 +37,8 @@ public class TestProductDaoImpl extends BaseMethodsTest {
         int expectedProductSum = 2;
         int departmentId1 = createDepartment("Department1");
         int departmentId2 = createDepartment("Department2");
-        productDao.addProduct(productBuilder.createProduct("TV", 300, departmentDao.getById(departmentId1).get()));
-        productDao.addProduct(productBuilder.createProduct("Telephone", 500, departmentDao.getById(departmentId2).get()));
+        productDao.addProduct(productBuilder.createProduct("TV", 300, departmentDao.getById(departmentId1)));
+        productDao.addProduct(productBuilder.createProduct("Telephone", 500, departmentDao.getById(departmentId2)));
         int actualProductSum = productDao.getAllProducts().size();
         Assert.assertEquals("Actual result must be expected", actualProductSum, expectedProductSum);
     }

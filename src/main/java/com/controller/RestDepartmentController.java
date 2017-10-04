@@ -2,9 +2,9 @@ package com.controller;
 
 import com.client.Department;
 import com.dao.DepartmentDao;
-import com.google.common.base.Optional;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import java.util.List;
 
@@ -17,11 +17,7 @@ public class RestDepartmentController {
 
     @RequestMapping(value = "/department/{id}", method = RequestMethod.GET)
     public Department getIdByName(@PathVariable("id") int id) {
-        Optional<Department> departmentOptional = departmentDao.getById(id);
-        if (!departmentOptional.isPresent()) {
-            throw new IllegalStateException("No column was found!");
-        }
-        return departmentOptional.get();
+        return  departmentDao.getById(id);
     }
 
     @RequestMapping(value = "/allDepartment", method = RequestMethod.GET)

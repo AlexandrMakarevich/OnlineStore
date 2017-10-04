@@ -1,10 +1,10 @@
 package com.dao;
 
 import com.client.Department;
-import com.google.common.base.Optional;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import javax.annotation.Resource;
 import java.util.List;
 
@@ -24,8 +24,8 @@ public class TestDepartmentDao extends BaseMethodsTest{
       String departmentName = "Fishing";
       departmentDao.add(departmentName);
       int departmentId = getIdByNameDepartment(departmentName);
-      Optional<Department> departmentOptional = departmentDao.getById(departmentId);
-      Assert.assertEquals("Actual result must be expected", departmentName, departmentOptional.get().getName());
+      Department department = departmentDao.getById(departmentId);
+      Assert.assertEquals("Actual result must be expected", departmentName, department.getName());
     }
 
     @Test
