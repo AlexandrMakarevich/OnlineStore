@@ -1,5 +1,7 @@
 package com.client;
 
+import com.google.common.base.Objects;
+
 public class OrderItem {
 
     private Product product;
@@ -28,5 +30,20 @@ public class OrderItem {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderItem orderItem = (OrderItem) o;
+        return quantity == orderItem.quantity &&
+                Objects.equal(product, orderItem.product);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(product, quantity);
     }
 }

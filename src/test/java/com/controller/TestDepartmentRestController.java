@@ -24,7 +24,7 @@ public class TestDepartmentRestController extends BaseMethodsTest {
         String departmentName = "Electro devices";
         restDepartmentController.addDepartment(departmentName);
         int idAddedDepartment = getIdByNameDepartment(departmentName);
-        Department department = restDepartmentController.getIdByName(idAddedDepartment);
+        Department department = restDepartmentController.getIdById(idAddedDepartment);
         Assert.assertEquals("DepartmentName must be the same as department.getName()", department.getName(), departmentName);
     }
 

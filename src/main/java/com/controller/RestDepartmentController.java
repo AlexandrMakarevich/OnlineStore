@@ -16,7 +16,7 @@ public class RestDepartmentController {
     private DepartmentDao departmentDao;
 
     @RequestMapping(value = "/department/{id}", method = RequestMethod.GET)
-    public Department getIdByName(@PathVariable("id") int id) {
+    public Department getIdById(@PathVariable("id") int id) {
         return  departmentDao.getById(id);
     }
 

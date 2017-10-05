@@ -1,5 +1,7 @@
 package com.client;
 
+import com.google.common.base.Objects;
+
 public class Product {
 
     private int id;
@@ -48,5 +50,21 @@ public class Product {
 
     public void setDepartment(Department department) {
         this.department = department;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return id == product.id &&
+                price == product.price &&
+                Objects.equal(name, product.name) &&
+                Objects.equal(department, product.department);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, name, price, department);
     }
 }

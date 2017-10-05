@@ -20,7 +20,7 @@
 
                 <entry key="addOrder" value="insert into `order`(status) value(:p_status)"/>
 
-                <entry key="addOrderItem" value="insert into order_item (order_id, product_id, quantity) value(:p_id, :p_product_id, :p_quantity) where id = :p_id"/>
+                <entry key="addOrderItem" value="insert into order_item (order_id, product_id, quantity) values(:p_id, :p_product_id, :p_quantity)"/>
 
                 <entry key="getAllOrder" value="select order_item.order_id, order_item.product_id, order_item.quantity, product.product_name, product.price, product.department_id,department.department_name,`order`.status from order_item inner join product on order_item.product_id=product.id inner join department on product.department_id=department.id inner join `order` on `order`.id = order_item.order_id"/>
 

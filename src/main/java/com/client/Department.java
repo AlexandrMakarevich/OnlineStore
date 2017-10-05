@@ -1,5 +1,7 @@
 package com.client;
 
+import com.google.common.base.Objects;
+
 public class Department {
 
     private int id;
@@ -19,5 +21,19 @@ public class Department {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Department that = (Department) o;
+        return id == that.id &&
+                Objects.equal(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, name);
     }
 }

@@ -6,14 +6,14 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
 import javax.annotation.Resource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-
 import static com.constant.Constant.DEPARTMENT_ID;
 import static com.constant.Constant.DEPARTMENT_NAME;
 
@@ -30,14 +30,16 @@ public class DepartmentDaoImpl implements DepartmentDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public void add(String name) {
+    public int add(String name) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = queries.get("addDepartment");
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("p_name", name);
-        int changeColumn = namedParameterJdbcTemplate.update(query, sqlParameterSource);
+        int changeColumn = namedParameterJdbcTemplate.update(query, sqlParameterSource, keyHolder);
         if (changeColumn == 0) {
             System.out.println("No column was changed!");
             throw new IllegalStateException("No column was changed!");
         }
+        return keyHolder.getKey().intValue();
     }
 
     public Department getById(int id) {

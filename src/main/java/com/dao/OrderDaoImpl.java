@@ -12,14 +12,13 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
+import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import static com.constant.Constant.ORDER_ID;
-
+@Transactional
 @Repository("orderDaoImpl")
 public class OrderDaoImpl implements OrderDao {
 
@@ -32,7 +31,7 @@ public class OrderDaoImpl implements OrderDao {
     @Resource(name = "orderBuilderFromResultSet")
     private OrderBuilderFromResultSet orderBuilder;
 
-    public void addOrder(Order order) {
+    public int addOrder(Order order) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = queries.get("addOrder");
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
@@ -44,10 +43,11 @@ public class OrderDaoImpl implements OrderDao {
             String sql = queries.get("addOrderItem");
             MapSqlParameterSource mapSqlParameterSource1 = new MapSqlParameterSource();
             mapSqlParameterSource1.addValue("p_id", idOfLastInsertOrder);
-            mapSqlParameterSource1.addValue("p_product_id", orderItem.getProduct());
+            mapSqlParameterSource1.addValue("p_product_id", orderItem.getProduct().getId());
             mapSqlParameterSource1.addValue("p_quantity", orderItem.getQuantity());
             namedParameterJdbcTemplate.update(sql, mapSqlParameterSource1);
         }
+        return idOfLastInsertOrder;
     }
 
     public List<Order> getAllOrders() {
@@ -71,7 +71,7 @@ public class OrderDaoImpl implements OrderDao {
 
     public Order getOrderById(final int orderId) {
         String query = queries.get("getOrderById");
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("p_id", ORDER_ID);
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("p_id", orderId);
         return namedParameterJdbcTemplate.query(query, sqlParameterSource, new ResultSetExtractor<Order>() {
             public Order extractData(ResultSet rs) throws SQLException, DataAccessException {
                 Map<Integer, Order> orderMap = new HashMap<Integer, Order>();
