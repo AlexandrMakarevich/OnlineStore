@@ -1,17 +1,20 @@
 package com.dao;
 
 import com.client.Department;
+import com.testDao.DepartmentDaoTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import javax.annotation.Resource;
 import java.util.List;
 
-public class TestDepartmentDao extends BaseMethodsTest{
+public class TestDepartmentDao extends BaseTest {
 
     @Resource(name = "departmentDaoImpl")
     private DepartmentDao departmentDao;
+
+    @Resource(name = "departmentDaoTestImpl")
+    private DepartmentDaoTest departmentDaoTest;
 
     @Before
     public void init() {
@@ -22,18 +25,19 @@ public class TestDepartmentDao extends BaseMethodsTest{
     @Test
     public void testAddDepartment() {
       String departmentName = "Fishing";
-      departmentDao.add(departmentName);
+      Department department = departmentDaoTest.createDepartment(departmentName);
+      departmentDao.add(department);
       int departmentId = getIdByNameDepartment(departmentName);
-      Department department = departmentDao.getById(departmentId);
-      Assert.assertEquals("Actual result must be expected", departmentName, department.getName());
+      Department actualDepartment = departmentDao.getById(departmentId);
+      Assert.assertEquals("Actual result must be expected", departmentName, actualDepartment.getName());
     }
 
     @Test
     public void testGetAllDepartments() {
         int expectedCountDepartment = 3;
-        String department1 = "Fishing";
-        String department2 = "Appliances";
-        String department3 = "Household chemicals";
+        Department  department1 = departmentDaoTest.createDepartment("Fishing");
+        Department department2 = departmentDaoTest.createDepartment("Appliances");
+        Department department3 = departmentDaoTest.createDepartment("Household chemicals");
         departmentDao.add(department1);
         departmentDao.add(department2);
         departmentDao.add(department3);

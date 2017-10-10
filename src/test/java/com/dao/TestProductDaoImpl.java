@@ -1,13 +1,16 @@
 package com.dao;
 
+import com.client.Department;
 import com.client.Product;
+import com.testDao.DepartmentDaoTest;
 import com.testDao.ProductDaoTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import javax.annotation.Resource;
 
-public class TestProductDaoImpl extends BaseMethodsTest {
+public class TestProductDaoImpl extends BaseTest {
 
     @Resource(name = "productDaoImpl")
     private ProductDao productDao;
@@ -15,8 +18,8 @@ public class TestProductDaoImpl extends BaseMethodsTest {
     @Resource(name = "productDaoTestImpl")
     private ProductDaoTest productDaoTest;
 
-    @Resource(name = "departmentDaoImpl")
-    private DepartmentDao departmentDao;
+    @Resource(name = "departmentDaoTestImpl")
+    private DepartmentDaoTest departmentDaoTest;
 
     @Before
     public void init(){
@@ -27,8 +30,8 @@ public class TestProductDaoImpl extends BaseMethodsTest {
     @Test
     public void testAddProduct() {
         String productName = "TV";
-        String departmentName = "Department1";
-        Product product = productDaoTest.createProduct(productName, 300, departmentName);
+        Department department = departmentDaoTest.createDepartment("Department1");
+        Product product = productDaoTest.createProduct(productName, 300, department);
         int actualId = productDao.addProduct(product);
         product.setId(actualId);
         Product actualProduct = productDao.getById(actualId);
@@ -38,10 +41,10 @@ public class TestProductDaoImpl extends BaseMethodsTest {
     @Test
     public void testGetAllProducts() {
         int expectedProductSum = 2;
-        String departmentName = "Department1";
-        String departmentName2 = "Department2";
-        Product product1 = productDaoTest.createProduct("TV", 400, departmentName);
-        Product product2 = productDaoTest.createProduct("Telephone", 600, departmentName2);
+        Department department1 = departmentDaoTest.createDepartment("Department1");
+        Department department2 = departmentDaoTest.createDepartment("Department2");
+        Product product1 = productDaoTest.createProduct("TV", 400, department1);
+        Product product2 = productDaoTest.createProduct("Telephone", 600, department2);
         productDao.addProduct(product1);
         productDao.addProduct(product2);
         int actualProductSum = productDao.getAllProducts().size();

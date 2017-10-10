@@ -1,14 +1,29 @@
 package com.client;
 
 import com.google.common.base.Objects;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "`order`")
 public class Order {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "order_order_item_map",
+            joinColumns =  @JoinColumn(name = "order_id") ,
+            inverseJoinColumns = @JoinColumn(name = "order_item_id"))
     private List<OrderItem> orderItems = new ArrayList<OrderItem>();
+
+    @Column(name = "status")
+    @NotNull
     private String status;
+
     public static final String DEFAULT_STATUS = "Pending";
 
     public void addOrderItems(List<OrderItem> orderItemList) {

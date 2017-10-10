@@ -30,10 +30,10 @@ public class DepartmentDaoImpl implements DepartmentDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public int add(String name) {
+    public int add(Department department) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = queries.get("addDepartment");
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("p_name", name);
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("p_name", department.getName());
         int changeColumn = namedParameterJdbcTemplate.update(query, sqlParameterSource, keyHolder);
         if (changeColumn == 0) {
             System.out.println("No column was changed!");

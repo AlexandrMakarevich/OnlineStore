@@ -23,4 +23,9 @@ public class TestDbPatching {
         autoPatchService.setDatabaseType("mysql");
 //        autoPatchService.patch();
     }
+
+    @Test
+    public void test1() {
+
+    }
 }

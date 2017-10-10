@@ -15,9 +15,8 @@ public class ProductDaoTestImpl implements ProductDaoTest {
     @Resource(name = "departmentDaoTestImpl")
     private DepartmentDaoTest departmentDaoTest;
 
-    public Product createProduct(String productName, int price, String departmentName) {
-        Department department = departmentDaoTest.createDepartment(departmentName);
-        department.setId(departmentDao.add(departmentName));
+    public Product createProduct(String productName, int price, Department department) {
+        department.setId(departmentDao.add(department));
         Product product = new Product();
         product.setName(productName);
         product.setPrice(price);

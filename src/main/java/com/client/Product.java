@@ -1,12 +1,28 @@
 package com.client;
 
 import com.google.common.base.Objects;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
+@Entity
+@Table(name = "product")
 public class Product {
 
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = "product_name")
+    @NotNull
     private String name;
+
+    @Column(name = "price")
+    @NotNull
     private int price;
+
+    @OneToOne
+    @JoinColumn(name = "department_id")
+    @NotNull
     private Department department;
 
     public Product(int id, String name, int price, Department department) {

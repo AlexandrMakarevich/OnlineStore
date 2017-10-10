@@ -4,13 +4,14 @@ import com.client.Department;
 import com.dao.DepartmentDao;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import java.util.List;
 
 @RestController("restDepartmentController")
 @Transactional
 public class RestDepartmentController {
+
+//   public static final String NAME = "departmentDaoImpl";
 
     @Resource(name = "departmentDaoImpl")
     private DepartmentDao departmentDao;
@@ -26,7 +27,7 @@ public class RestDepartmentController {
     }
 
     @RequestMapping(value = "/addDepartment", method = RequestMethod.POST)
-    public void addDepartment(@RequestBody String name) {
-        departmentDao.add(name);
+    public void addDepartment(@RequestBody Department department) {
+        departmentDao.add(department);
     }
 }

@@ -1,5 +1,6 @@
 package com.testDao;
 
+import com.client.Department;
 import com.client.Order;
 import com.client.OrderItem;
 import com.client.Product;
@@ -18,8 +19,8 @@ public class OrderDaoTestImpl implements OrderDaoTest {
     @Resource(name = "productDaoImpl")
     private ProductDao productDao;
 
-    public Order createOrder(String productName, int price, String departmentName, String status, int quantity) {
-        Product product  = productDaoTest.createProduct(productName, price, departmentName);
+    public Order createOrder(String productName, int price, Department department, String status, int quantity) {
+        Product product  = productDaoTest.createProduct(productName, price, department);
         product.setId(productDao.addProduct(product));
         Order order = new Order();
         List<OrderItem> orderItems = new ArrayList<OrderItem>();

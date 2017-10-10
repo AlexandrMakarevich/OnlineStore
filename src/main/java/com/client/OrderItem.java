@@ -1,10 +1,25 @@
 package com.client;
 
 import com.google.common.base.Objects;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
+@Entity
+@Table(name = "order_item")
 public class OrderItem {
 
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @OneToOne
+    @JoinColumn(name = "product_id")
+    @NotNull
     private Product product;
+
+    @Column(name = "quantity")
+    @NotNull
     private int quantity;
 
     public OrderItem() {

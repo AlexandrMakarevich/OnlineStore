@@ -1,10 +1,19 @@
 package com.client;
 
 import com.google.common.base.Objects;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
+@Entity
+@Table(name = "department")
 public class Department {
 
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = "department_name")
+    @NotNull
     private String name;
 
     public int getId() {

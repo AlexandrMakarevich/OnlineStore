@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,7 +21,8 @@ import static com.constant.Constant.DEPARTMENT_NAME;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-store-application.xml")
-public abstract  class BaseMethodsTest {
+@Transactional
+public abstract  class BaseTest {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
