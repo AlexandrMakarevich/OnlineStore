@@ -24,8 +24,4 @@ public class TestDbPatching {
 //        autoPatchService.patch();
     }
 
-    @Test
-    public void test1() {
-
-    }
 }

@@ -1,10 +1,13 @@
 package com.client;
 
 import com.google.common.base.Objects;
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Proxy(lazy = false)
 @Table(name = "department")
 public class Department {
 

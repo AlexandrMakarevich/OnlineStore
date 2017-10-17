@@ -1,12 +1,16 @@
 package com.client;
 
 import com.google.common.base.Objects;
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Proxy(lazy = false)
 @Table(name = "`order`")
 public class Order {
 
@@ -14,7 +18,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "order_order_item_map",
             joinColumns =  @JoinColumn(name = "order_id") ,
             inverseJoinColumns = @JoinColumn(name = "order_item_id"))
@@ -24,14 +28,15 @@ public class Order {
     @NotNull
     private String status;
 
-    public static final String DEFAULT_STATUS = "Pending";
+    @Column(name = "date_of_order")
+    private Instant dateOfOrder = Instant.now();
 
-    public void addOrderItems(List<OrderItem> orderItemList) {
-        orderItems.addAll(orderItemList);
+    public Instant getDateOfOrder() {
+        return dateOfOrder;
     }
 
-    public void addOrderItem(OrderItem orderItem) {
-        orderItems.add(orderItem);
+    public void setDateOfOrder(Instant dateOfOrder) {
+        this.dateOfOrder = dateOfOrder;
     }
 
     public String getStatus() {

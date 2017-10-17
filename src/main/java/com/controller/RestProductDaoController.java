@@ -4,8 +4,8 @@ import com.client.Product;
 import com.dao.ProductDao;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
-import java.util.List;
 
 @RestController("productDaoRestController")
 @Transactional
@@ -17,15 +17,6 @@ public class RestProductDaoController {
     @RequestMapping(value = "/product/{id}", method = RequestMethod.GET)
     public Product getProductById(@PathVariable("id") int id) {
         return productDao.getById(id);
-    }
-
-    @RequestMapping(value = "/allProducts", method = RequestMethod.GET)
-    public List<Product> getAllProducts() {
-        List<Product> products = productDao.getAllProducts();
-        if (products.isEmpty()) {
-            throw new IllegalStateException("You don't have any products");
-        }
-        return products;
     }
 
     @RequestMapping(value = "/addProduct", method = RequestMethod.POST)

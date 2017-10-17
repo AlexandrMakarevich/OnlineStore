@@ -1,10 +1,14 @@
 package com.client;
 
 import com.google.common.base.Objects;
+import org.hibernate.annotations.Proxy;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@Proxy(lazy = false)
 @Table(name = "product")
 public class Product {
 
@@ -20,17 +24,12 @@ public class Product {
     @NotNull
     private int price;
 
-    @OneToOne
-    @JoinColumn(name = "department_id")
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "product_department_map",
+    joinColumns = @JoinColumn(name = "product_id"),
+    inverseJoinColumns = @JoinColumn(name = "department_id"))
     @NotNull
-    private Department department;
-
-    public Product(int id, String name, int price, Department department) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.department = department;
-    }
+    private List<Department> departments = new ArrayList<Department>();
 
     public Product() {
 
@@ -60,12 +59,16 @@ public class Product {
         this.price = price;
     }
 
-    public Department getDepartment() {
-        return department;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public void setDepartment(Department department) {
-        this.department = department;
+    public List<Department> getDepartments() {
+        return departments;
+    }
+
+    public void setDepartments(List<Department> departments) {
+        this.departments = departments;
     }
 
     @Override
@@ -73,14 +76,14 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return id == product.id &&
-                price == product.price &&
+        return price == product.price &&
+                Objects.equal(id, product.id) &&
                 Objects.equal(name, product.name) &&
-                Objects.equal(department, product.department);
+                Objects.equal(departments, product.departments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, name, price, department);
+        return Objects.hashCode(id, name, price, departments);
     }
 }

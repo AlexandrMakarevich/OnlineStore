@@ -19,7 +19,6 @@
     <context:property-placeholder location="classpath:*.properties"/>
     <context:component-scan base-package="com"/>
     <tx:annotation-driven transaction-manager="transactionManager"/>
-    <import resource="classpath:sql-query.xml"/>
 
     <jee:jndi-lookup id="dataSource"
                      jndi-name="jdbc/DSTest"
