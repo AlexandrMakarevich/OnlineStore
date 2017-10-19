@@ -54,9 +54,9 @@ public class TestOrderDaoImpl extends BaseTest {
     @Test
     public void getOrderByStatusAndProductName() {
         SearchCriteria searchCriteria = new SearchCriteria();
-//        searchCriteria.setOrderStatus("Pending");
-//        searchCriteria.setProductName("Product2");
-        searchCriteria.setProductQuantity(2);
+        searchCriteria.setOrderStatus("Pending");
+        searchCriteria.setProductName("Product2");
+        searchCriteria.setProductQuantity(333);
         List<Order> order = orderDao.getOrderByStatusAndProductName(searchCriteria);
         System.out.println(order);
     }
@@ -66,7 +66,7 @@ public class TestOrderDaoImpl extends BaseTest {
         SearchCriteria searchCriteria = new SearchCriteria();
         searchCriteria.setOrderStatus("Pending");
         searchCriteria.setProductName("Product2");
-        searchCriteria.setProductQuantity(2);
+        searchCriteria.setProductQuantity(333);
         Integer count = orderDao.selectCountOrder(searchCriteria);
         System.out.println(count);
     }
