@@ -2,7 +2,6 @@ package com.client;
 
 import com.google.common.base.Objects;
 import org.hibernate.annotations.Proxy;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -47,5 +46,13 @@ public class Department {
     @Override
     public int hashCode() {
         return Objects.hashCode(id, name);
+    }
+
+    @Override
+    public String toString() {
+        return "Department{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

@@ -8,6 +8,7 @@
     <import resource="classpath:/store_application.xml"/>
 
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
         <property name="jdbcUrl" value="${url}"/>
         <property name="user" value="${userName}"/>
         <property name="password" value="${password}"/>

@@ -12,7 +12,7 @@ public class DepartmentBuilder {
 
     public void init() {
         department = new Department();
-        department.setName("Department1");
+        department.setName("Department2");
     }
 
     public DepartmentBuilder withDepartmentName(String departmentName) {

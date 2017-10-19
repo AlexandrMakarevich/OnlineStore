@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
 import javax.annotation.Resource;
+import java.util.List;
 
 public class TestOrderDaoImpl extends BaseTest {
 
@@ -26,7 +27,6 @@ public class TestOrderDaoImpl extends BaseTest {
 
     @Before
     public void init() {
-        cleanAllTable();
         orderItemBuilder = new OrderItemBuilder();
         orderBuilder = new OrderBuilder();
     }
@@ -41,5 +41,33 @@ public class TestOrderDaoImpl extends BaseTest {
         int actualProductId = orderDao.addOrder(order);
         Order actualOrder = orderDao.getOrderById(actualProductId);
         Assert.assertEquals("Actual result must be expected", actualOrder, order);
+    }
+
+    @Test
+    public void testGetAllPendingOrder() {
+        List<Order> orders = orderDao.getAllPendingOrder();
+        for (Order order : orders) {
+            System.out.println(order.toString());
+        }
+    }
+
+    @Test
+    public void getOrderByStatusAndProductName() {
+        SearchCriteria searchCriteria = new SearchCriteria();
+//        searchCriteria.setOrderStatus("Pending");
+//        searchCriteria.setProductName("Product2");
+        searchCriteria.setProductQuantity(2);
+        List<Order> order = orderDao.getOrderByStatusAndProductName(searchCriteria);
+        System.out.println(order);
+    }
+
+    @Test
+    public void testCountOrder() {
+        SearchCriteria searchCriteria = new SearchCriteria();
+        searchCriteria.setOrderStatus("Pending");
+        searchCriteria.setProductName("Product2");
+        searchCriteria.setProductQuantity(2);
+        Integer count = orderDao.selectCountOrder(searchCriteria);
+        System.out.println(count);
     }
 }

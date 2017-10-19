@@ -17,7 +17,7 @@ public class ProductBuilder {
     public void init() {
         departments = new ArrayList<>();
         product = new Product();
-        product.setName("Product1");
+        product.setName("Product2");
         product.setPrice(300);
         product.setDepartments(departments);
     }

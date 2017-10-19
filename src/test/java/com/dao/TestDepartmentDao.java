@@ -6,7 +6,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
+
 import javax.annotation.Resource;
+import java.util.List;
 
 public class TestDepartmentDao extends BaseTest {
 
@@ -28,7 +30,13 @@ public class TestDepartmentDao extends BaseTest {
         Department department = departmentBuilder.withDepartmentName(departmentName)
                                                  .build();
         int departmentId = departmentDao.add(department);
-        Department actualDepartment = departmentDao.getById(departmentId);
+        Department actualDepartment = departmentDao.getByIdWithCriteria(departmentId);
         Assert.assertEquals("Actual result must be expected", actualDepartment, department);
+    }
+
+    @Test
+    public void test() {
+        List<Department> departments = departmentDao.getAllDepartment();
+        System.out.println(departments);
     }
 }
